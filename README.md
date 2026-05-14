@@ -1,235 +1,118 @@
-## Acknowledgments
+# Run JUnit Tests with Maven and qTest Automation on TestMu AI (Formerly LambdaTest)
 
-Before diving into the details of this project, we want to extend our acknowledgment to the [shell-agent-samples](https://github.com/sanjayjohn/shell-agent-samples/tree/master/AutomationHostExamples/automateJunit) repository and its contributors. The code and concepts from this repository have significantly inspired and contributed to the development of this JUnit with Maven Build Automation tool. 
+<p align="center">
+  <a href="https://www.testmuai.com/"><img src="https://img.shields.io/badge/MADE%20BY%20TestMu%20AI-000000.svg?style=for-the-badge&labelColor=000" alt="Made by TestMu AI"></a>
+  <a href="https://mvnrepository.com/artifact/junit/junit"><img src="https://img.shields.io/maven-central/v/junit/junit.svg?style=for-the-badge&labelColor=000000" alt="JUnit version"></a>
+  <a href="https://community.testmuai.com/"><img src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&labelColor=000000" alt="Community"></a>
+</p>
 
-# JUnit with Maven Build Automation — TestMu AI (Formerly LambdaTest)
+## Getting Started
 
+[TestMu AI](https://www.testmuai.com/) (Formerly LambdaTest) is the world's first full-stack AI Agentic Quality Engineering platform that empowers teams to test intelligently, smarter, and ship faster. Built for scale, it offers a full-stack testing cloud with 10K+ real devices and 3,000+ browsers. With AI-native test management, MCP servers, and agent-based automation, TestMu AI supports Selenium, Appium, Playwright, and all major frameworks.
 
-## Overview
-This example illustrates how to use the Shell Script Automation Host Feature to pull tests from GitHub, run an Apache Maven build of JUnit tests, parse the results, and automatically upload the test results to qTest Manager. After the initial upload, the script allows the user to schedule certain tests from qTest Manager, rerun selected tests, and update only those results on qTest.
+With TestMu AI (Formerly LambdaTest), you can run JUnit tests built with Apache Maven, automatically upload results to qTest Manager, and schedule selective reruns from the qTest dashboard. This sample shows how to configure the Shell Script Automation Host to run on the TestMu AI cloud.
 
+- [Sign up on TestMu AI](https://www.testmuai.com/register/) (Formerly LambdaTest).
+- Follow the documentation on [JUnit with qTest Automation on TestMu AI](https://www.testmuai.com/support/docs/junit-with-qtest-lambdatest/) (Formerly LambdaTest) for the full setup walkthrough.
 
-## Prerequisites
-1) Install Python 3.6 from [https://www.python.org/downloads/](https://www.python.org/downloads/)
+### Prerequisites
 
-2) Install Apache Maven from [https://maven.apache.org](https://maven.apache.org/)
+- Python 3.6 or higher
+- Apache Maven
+- Git
+- A qTest Manager account with your API token and URL
+- A TestMu AI (Formerly LambdaTest) account with your username and access key
 
-3) Install Git for the Command Line from [https://git-scm.com/download/](https://git-scm.com/download/)
+### Setup
 
-### Tips for Set Up
-Windows:
+Clone and install dependencies:
 
-Before running the automation host script ensure that all environmental variables are set up correctly, specifically that the PATH variable has been updated for Python, Maven, and Git
-
-Mac:
-
-Use Homebrew to install Python and Maven. Steps for installing Homebrew can be found at [https://brew.sh](https://brew.sh)
-
-After installing Homebrew run this following command to get Python3:
-
-`brew install python3`
-
-Enter the following command to get Apache Maven
-
-`brew install maven`
-
-### From Terminal (Mac) or Command Prompt (Windows)
-1. Make sure pip was installed correctly with python on your machine by running the following command. It should output the pip version:
-
- `pip --version`
-
- Note: pip3 will work as well. Try `pip3 --version`
-
-2. If pip is not installed, run the following command to install pip:
-
- `python -m -ensurepip --default-pip`
-
-More information about downloading pip can be found at [https://packaging.python.org/tutorials/installing-packages/](https://packaging.python.org/tutorials/installing-packages/)
-
-3. After you have ensured pip is installed, run the following commands individually:
-
-`pip install requests`
-
-`pip install beautifulsoup4`
-
-`pip install lxml`
-
-`pip install pybase64`
-
-Note: If using pip3 run commands with pip3 instead e.g. `pip3 install requests`
-
-These commands will install the necessary modules required to run the python scripts. The modules are used to send requests to the API, parse xml documents, and upload files to qTest.
-
-
-
-## Update Configuration File
-**git\_url:** The shell script uses the url to clone a repository and send pull requests everytime it runs if -g input is used
-
-**local\_repository:** The folder containing the test cases. The shell script will use this to know where to run the maven build. Make sure to place this folder in the same directory as the python and shell scripts.
-
-**qtest\_api\_token:** The token used to authorize the connection to qTest Manager
-
-**qtest\_url:** The personal url that is used to access QASymphony API
-
-![](../automateJunit/images/config.json.png)
-
-Open the conf.json file and update with your personal information. Enter your own qTest URL and API Token found in the qTest Manager Environment.
-
-For this example we will be pulling a JUnit Sample Test [https://github.com/LambdaTest/junit-qtest-sample](https://github.com/LambdaTest/junit-qtest-sample). For the git url and local repository use the information shown below in the example configuration file. Make sure to use your own api token and url or the demo will not work.
-
-![](./automateJunit/images/config.json.png)
-
-
-## Set Up Automation
-### qTest Host
-
-### 1. Download and Copy the File
-- **Download** the required file from the following link:
-  [Download link](https://support-hub.tricentis.com/open?sys_kb_id=194a54eedb4f5c181ea7bb13f3961950&id=kb_article_view&number=KB0015571)
-  
-  The file is named `agentctl-[version]-mac-x64-full.tgz`.
-
-- **Copy** the downloaded file to your installation directory. Example:
-
-    ```bash
-    cp agentctl-[version]-mac-x64-full.tgz /usr/local/agentctl-[version]-mac-x64-full.tgz
-    ```
-
-2. **Extract the Downloaded File**
-   - After downloading, extract the qTest Host file.
-
-3. **Start the Agent**
-   - Navigate to the directory where you extracted the files:
-     ```
-     cd /path/to/agentctl-[version]
-     ```
-   - Start the agent with the following command:
-     ```
-     ./agentctl start
-     ```
-
-4. **Open Command Line (CMD)**
-   - Run this command:
-     ```
-     agentctl.bat start
-     ```
-
-### Accessing the Host
-
-- **Case 1:** If the command runs successfully, open your local browser and go to:
-
-
-## Navigate to the Host
-```
-http://localhost:6789
+```bash
+git clone https://github.com/LambdaTest/automate-junit-qtest && cd automate-junit-qtest
+pip install requests beautifulsoup4 lxml pybase64
 ```
 
-- **Case 2:** If you encounter an error like `port 6789 {6789}: could not start`, follow these steps:
-1. Open the directory of qTest Automation Host.
-2. Locate and open `agent.config`.
-3. Change the port number as needed.
+Set your credentials as environment variables.
 
-5. **Successful Start**
- - Once the configuration is correct, you should see a message indicating the port has started successfully.
+**macOS / Linux:**
 
-6. **Final Step**
- - Run this in your browser according to your configured port number:
-   ```
-   http://localhost:6789
-   ```
- for more detail follow : https://documentation.tricentis.com/qtest/od/en/content/launch/automation_host/installation/qtest_automation_host_2.x_installation_guide_on_windows.htm
+```bash
+export LT_USERNAME="YOUR_USERNAME"
+export LT_ACCESS_KEY="YOUR_ACCESS_KEY"
+```
 
-1. Navigate to your Automation Host
+**Windows:**
 
- ![](./automateJunit/images/automationhosthome.png)
+```bash
+set LT_USERNAME="YOUR_USERNAME"
+set LT_ACCESS_KEY="YOUR_ACCESS_KEY"
+```
 
-2.    Add a new agent and fill out the path directory and enter the script into the kick off script field
+Update the `conf.json` file with your qTest API token and URL, then set the `git_url` and `local_repository` fields as required.
 
-![](./automateJunit/images/add.png)
- 
-**Agent Name:** Name
+### Run tests
 
-**qTest Manager Project:** Choose your project
+```bash
+./run.sh
+```
 
-**Agent Type:** Choose Shell Agent
+On Windows, use `run.bat` instead. Start the shell script from the qTest Automation Host by clicking the **kick-off shell scripts now** button to upload all test cases to qTest.
 
-**Directory:** The directory containing your scripts and shell agent (Directory where the scripts were cloned)
+View results on your TestMu AI dashboard.
 
-**Set Allocated Execution Time:** Amount of time you expect the script to take to execute in minutes
+### Local testing with TestMu AI Tunnel
 
-**Kick-off scripts:** The file path to your shell script. This shell scripts takes in two inputs, one for using git and the second for updating your current test cycle.
+To test locally hosted apps, set up the TestMu AI tunnel. OS-specific guides:
 
-### Shell Script Inputs
-**-g**    Uses GitHub to clone a test case repository and send pull requests every time shell script is run
+- [Local Testing on Windows](https://www.testmuai.com/support/docs/local-testing-for-windows/)
+- [Local Testing on macOS](https://www.testmuai.com/support/docs/local-testing-for-macos/)
+- [Local Testing on Linux](https://www.testmuai.com/support/docs/local-testing-for-linux/)
 
-**-u** Updates an existing test cycle or create a new test cycle if first test run
+Add the following to your capabilities:
 
-**-b <"branch name">** If the Github parameter is used, this input allows the user to clone the repository and make a branch that they specify with the input.
+```js
+tunnel: true,
+```
 
-To run the shell agent without using GitHub or without updating the existing test cycle do not include these parameters in the kick off scripts section. An example of not using -g is used in the JMeter Automation example.
+## Contributions
 
+Contributions are welcome. Open an issue to discuss your idea before submitting a pull request. When reporting bugs, include your Java version, OS, and Maven version.
 
+## TestMu AI (Formerly LambdaTest) Community
 
-## For Mac Users (Use run.sh)
- ![](./automateJunit/images/agentmac.png)
+Connect with testers and developers in the [TestMu AI Community](https://community.testmuai.com/). Ask questions, share what you are building, and discuss best practices in test automation and DevOps.
 
-Note for Mac Users: Make sure the shell script is executable by running the command shown below in the shell scripts directory:
+## TestMu AI (Formerly LambdaTest) Certifications
 
-`chmod +x run.sh`
+Earn free [TestMu AI Certifications](https://www.testmuai.com/certifications/) for testers, developers, and QA engineers. Validate your skills in Selenium, Cypress, Playwright, Appium, Espresso and more. Industry-recognized, shareable on LinkedIn, and built by practitioners, not marketers.
 
-This command gives the shell script permission to run.
+## Learning Resources by TestMu AI (Formerly LambdaTest)
 
+Learn modern testing through tutorials, guides, videos, and weekly updates:
 
+* [TestMu AI Blog](https://www.testmuai.com/blog/)
+* [TestMu AI Learning Hub](https://www.testmuai.com/learning-hub/)
+* [TestMu AI on YouTube](https://www.youtube.com/@TestMuAI)
+* [TestMu AI Newsletter](https://www.testmuai.com/newsletter/)
 
-## For Windows Users (Use run.bat)
-![](./automateJunit/images/agentwin.png)
- 
+## LambdaTest is Now TestMu AI
 
-## Running Shell Script
-Start the shell script by pressing `kick-off shell scripts now` button under the action text field, which will upload all of the tests cases to qTest
+On **January 12, 2026**, [LambdaTest evolved to TestMu AI](https://www.testmuai.com/lambdatest-is-now-testmuai/), the world's first fully autonomous **Agentic AI Quality Engineering Platform**.
 
-![](./automateJunit/images/runscript.png)
- 
+Same team. Same infrastructure. Same customer accounts. All existing LambdaTest logins, scripts, capabilities, and integrations continue to work without change.
 
-## Scheduling Tests
-1.  Login into qTest Manager, go to the Test Execution tab, and there should be a test cycle under your project called &quot;Junit Automated Tests&quot;
+👉 Find the new home for [LambdaTest](https://www.testmuai.com).
 
- ![](./automateJunit/images/junitcycle.png)
+### How LambdaTest Evolved into TestMu AI
 
-2. Click on the test cycle and it should show all of the tests that were run through the maven build and their statuses.
+In 2017, we launched LambdaTest with a simple mission: make testing fast, reliable, and accessible. As LambdaTest grew, we expanded into Test Intelligence, Visual Regression Testing, Accessibility Testing, API Testing, and Performance Testing, covering the full depth of the testing lifecycle.
 
-![](./automateJunit/images/testcycle.png)
+As software development entered the AI era, testing had to evolve, too. We rebuilt the architecture to be AI-native from the ground up, with autonomous agents that **plan, author, execute, analyze, and optimize tests** while keeping humans in the loop. The platform integrates with your repos, CI, IDEs, and terminals, continuously learning from every code change and development signal.
 
-**Tips for Maven Build:**
+That evolution earned a new name: **TestMu AI**, built for an AI-first future of quality engineering. TestMu is not a new name for us. It is the name of our annual community conference, which has brought together 100,000+ quality engineers to discuss how AI would reshape testing, long before that became an industry norm.
 
-In the pom.xml file, make sure that maven-surefire-plugin version is up to date. The shell script runs a maven test command to run single tests that will only work on surefire-plugin versions 2.19.1 and above.
+What started as a high-performance cloud testing platform has transformed into an AI-native, multi-agent system powering a connected, end-to-end quality layer. That evolution defined a new identity: LambdaTest evolved into TestMu AI, built for an AI-first future of quality engineering.
 
+## Support
 
-## 🚀 LambdaTest is Now TestMu AI
-
-👋 Welcome to TestMu AI, the next evolution of LambdaTest. As of January 2026, [LambdaTest is Now TestMu AI](https://www.testmuai.com/lambdatest-is-now-testmuai/) - we have evolved from a cross-browser testing cloud into a unified, AI-native quality engineering platform designed for the modern DevOps era.
-
-Whether you have been part of the LambdaTest community for years or are just discovering TestMu AI, our mission remains the same: to help you ship faster with high-scale test execution, autonomous testing, and deep quality analytics.
-
-### 🔄 Our Rebrand Journey
-
-In 2017, we introduced LambdaTest with a clear mission: to become the world's most trusted cloud testing platform. We built a scalable, high-performance test cloud that eliminated flakiness, improved developer feedback cycles, and accelerated release velocity for teams worldwide.
-
-As LambdaTest grew, we expanded the platform into Test Intelligence, Visual Regression Testing, Accessibility Testing, API Testing, and Performance Testing, covering the entire testing lifecycle. These capabilities enabled teams to test any stack, on any technology, at enterprise scale.
-
-Over time, we rebuilt the architecture to be AI-native from the ground up. What began as LambdaTest's high-performance testing cloud has now evolved into TestMu AI, an AI-native, multi-agent platform redefining modern quality engineering.
-
-We chose the name TestMu AI to reflect our shift towards intelligent, autonomous testing. While our identity has changed, our core technology and commitment to the testing community stay the same.
-
-👉 Find [LambdaTest's New Home](https://www.testmuai.com/).
-
-### 🔭 Explore TestMu AI
-
-The same infrastructure LambdaTest customers relied on, now delivered through autonomous AI agents.
-
-- [KaneAI](https://www.testmuai.com/kane-ai/)
-- [Agent-to-Agent Testing](https://www.testmuai.com/agent-to-agent-testing/)
-- [HyperExecute](https://www.testmuai.com/hyperexecute/)
-- [Real Device Cloud](https://www.testmuai.com/real-device-cloud/)
-- [Pricing](https://www.testmuai.com/pricing/)
-- [Documentation](https://www.testmuai.com/support/docs/)
+Got a question? Email [support@testmuai.com](mailto:support@testmuai.com) or chat with us 24x7 from our chat portal.
