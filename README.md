@@ -13,7 +13,7 @@
 With TestMu AI (Formerly LambdaTest), you can run JUnit tests built with Apache Maven, automatically upload results to qTest Manager, and schedule selective reruns from the qTest dashboard. This sample shows how to configure the Shell Script Automation Host to run on the TestMu AI cloud.
 
 - [Sign up on TestMu AI](https://www.testmuai.com/register/) (Formerly LambdaTest).
-- Follow the documentation on [JUnit with qTest Automation on TestMu AI](https://www.testmuai.com/support/docs/junit-with-qtest-lambdatest/) (Formerly LambdaTest) for the full setup walkthrough.
+- Follow the [TestMu AI Documentation](https://www.testmuai.com/support/docs/) for the full setup walkthrough.
 
 ### Prerequisites
 
